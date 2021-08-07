@@ -194,7 +194,7 @@ def mk_password_block(passwd, iteration, salt):
 	return password
 
 ## Unlock the device
-def unlock():
+def unlock(passwd):
 	global device_name
 
 	## Device should be in the correct state 
@@ -206,8 +206,9 @@ def unlock():
 		print(fail("Wrong device status!"))
 		sys.exit(1)
 	
-	## Get password from user
-	passwd = getpass.getpass("[wdpassport] password for {}: ".format(device_name))
+	if passwd is None:
+		## Get password from user
+		passwd = getpass.getpass("[wdpassport] password for {}: ".format(device_name))
 	
 	hash_parameters = read_handy_store_block1()
 	if not hash_parameters:
@@ -383,6 +384,7 @@ def main(argv):
 	parser.add_argument("-c", "--change_passwd", required=False, action="store_true", help="Change (or disable) password")
 	parser.add_argument("-e", "--erase", required=False, action="store_true", help="Secure erase device")
 	parser.add_argument("-d", "--device", dest="device", required=False, help="Force device path (ex. /dev/sdb). Usually you don't need this option.")
+	parser.add_argument("-p", "--password", dest="passwd", required=False, help="Password to unlock")
 
 	args = parser.parse_args()
 	
@@ -437,7 +439,7 @@ def main(argv):
 
 	## Perform actions.
 	if args.unlock:
-		unlock()
+		unlock(passwd)
 	if args.change_passwd:
 		print("Changing password for {}...".format(device_name))
 		change_password()
