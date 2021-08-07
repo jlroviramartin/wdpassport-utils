@@ -439,7 +439,7 @@ def main(argv):
 
 	## Perform actions.
 	if args.unlock:
-		unlock(passwd)
+		unlock(args.passwd)
 	if args.change_passwd:
 		print("Changing password for {}...".format(device_name))
 		change_password()
